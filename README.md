@@ -1,59 +1,57 @@
-# GenericChartDashboardWorkspace
+# generic-chart-dashboard
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+> Generic reusable Angular chart dashboard with Chart.js
 
-## Development server
-
-To start a local development server, run:
-
+## Install
 ```bash
-ng serve
+npm install generic-chart-dashboard chart.js
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Quick Start
+```typescript
+import { GenericChartDashboardComponent, DashboardConfig }
+  from 'generic-chart-dashboard';
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+config: DashboardConfig = {
+  pageTitle: 'My Dashboard',
+  apiUrl: 'api/mydata',
+  apiFn: async (url, body) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  },
+  fieldMap: (item) => ({
+    status:   item.status,
+    customer: item.customerName,
+    engineer: item.assignedTo,
+  }),
+  chartDefs: [
+    {
+      id: 'c0', title: 'By Status',
+      subtitle: 'Open vs Closed',
+      dataKey: 'status', chartType: 'doughnut', filterKey: 'status',
+    },
+  ],
+  columns: [
+    { key: 'status',   display: 'Status'   },
+    { key: 'customer', display: 'Customer' },
+  ],
+  kpis: [
+    { label: 'Total', countAll: true, sub: 'All', color: '#1e6fb5' },
+    { label: 'Open',  statusValue: 'Open', sub: 'Pending', color: '#b91c1c' },
+  ],
+};
+```
+```html
+<app-generic-chart-dashboard [config]="config" />
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Peer Dependencies
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| Package | Version |
+|---|---|
+| @angular/core | >= 17 |
+| chart.js | >= 4 |

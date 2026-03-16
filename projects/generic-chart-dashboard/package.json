@@ -19,12 +19,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/princepardhi04/generic-chart-dashboard"
+    "url": "https://github.com/PrinsPardhi/generic-chart-dashboard.git"
   },
   "bugs": {
-    "url": "https://github.com/princepardhi04/generic-chart-dashboard/issues"
+    "url": "https://github.com/PrinsPardhi/generic-chart-dashboard.git"
   },
-  "homepage": "https://github.com/princepardhi04/generic-chart-dashboard#readme",
+  "homepage": "https://github.com/PrinsPardhi/generic-chart-dashboard.git",
   "peerDependencies": {
     "@angular/common": ">=17.0.0",
     "@angular/core": ">=17.0.0",

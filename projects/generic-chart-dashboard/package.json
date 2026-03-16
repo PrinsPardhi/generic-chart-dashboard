@@ -1,0 +1,46 @@
+{
+  "name": "generic-chart-dashboard",
+  "version": "1.0.0",
+  "description": "Generic reusable Angular chart dashboard — Chart.js, KPIs, cascading filters, table view",
+  "keywords": [
+    "angular",
+    "chart",
+    "dashboard",
+    "chartjs",
+    "kpi",
+    "erp",
+    "generic",
+    "filter",
+    "doughnut",
+    "bar-chart",
+    "reusable"
+  ],
+  "author": "Prince Pardhi <princepardhi04@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/princepardhi04/generic-chart-dashboard"
+  },
+  "bugs": {
+    "url": "https://github.com/princepardhi04/generic-chart-dashboard/issues"
+  },
+  "homepage": "https://github.com/princepardhi04/generic-chart-dashboard#readme",
+  "peerDependencies": {
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/forms": ">=17.0.0",
+    "chart.js": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "chart.js": {
+      "optional": false
+    },
+    "@angular/forms": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

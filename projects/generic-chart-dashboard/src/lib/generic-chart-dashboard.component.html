@@ -1,0 +1,247 @@
+<div class="sd-page">
+  <div class="sd-body">
+
+    <!-- ── KPI ACCORDION ──────────────────────────────────────────────────── -->
+    <!-- <div class="sd-kpi-accordion" [class.sd-kpi-accordion--open]="kpiOpen">
+            <button class="sd-kpi-accordion-header" (click)="kpiOpen = !kpiOpen">
+                <div class="sd-kpi-accordion-left">
+                    <svg class="kpi-chevron" [class.kpi-chevron--open]="kpiOpen" width="14" height="14" fill="none"
+                        stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                    <span class="sd-section-label" style="margin:0;">
+                        Key Performance Indicators
+                    </span>
+                </div>
+            </button>
+            <div class="sd-kpi-body" *ngIf="kpiOpen">
+                <div class="sd-kpi-row">
+                    <div class="sd-kpi" *ngFor="let kpi of kpis" [style.--kpi-color]="kpi.color">
+                        <span class="kpi-accent"></span>
+                        <div class="kpi-lbl">{{ kpi.label }}</div>
+                        <div class="kpi-num">{{ kpi.value }}</div>
+                        <div class="kpi-sub">{{ kpi.sub }}</div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+    <!-- ── TAB BAR ────────────────────────────────────────────────────────── -->
+    <div class="sd-tab-bar">
+      <div class="sd-tabs">
+
+        <button class="sd-tab" [class.sd-tab--active]="activeTab === 'charts'" (click)="onTabChange('charts')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="12" width="4" height="9" rx="1" />
+            <rect x="10" y="7" width="4" height="14" rx="1" />
+            <rect x="17" y="3" width="4" height="18" rx="1" />
+          </svg>
+          Analysis Charts
+          <span class="sd-tab-filter-badge" *ngIf="activeFilterCount > 0">
+            {{ activeFilterCount }} filter{{ activeFilterCount !== 1 ? 's' : '' }}
+          </span>
+        </button>
+
+        <button class="sd-tab" [class.sd-tab--active]="activeTab === 'table'" (click)="onTabChange('table')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="3" y1="9" x2="21" y2="9" />
+            <line x1="3" y1="15" x2="21" y2="15" />
+            <line x1="9" y1="9" x2="9" y2="21" />
+          </svg>
+          Table View
+          <span class="sd-tab-count">{{ tableRows.length }}</span>
+        </button>
+
+      </div>
+
+      <!-- Active filter strip -->
+      <div class="sd-tab-bar-right" *ngIf="activeFilterCount > 0">
+        <span class="fs-label">Filters:</span>
+        <ng-container *ngFor="let sel of activeSelections; let i = index">
+          <span class="fs-arrow" *ngIf="i > 0">→</span>
+          <span class="fs-chip">
+            <span class="fs-chip-chart">{{ sel.title }}</span>
+            <span class="fs-chip-sep">›</span>
+            <span class="fs-chip-val">{{ sel.label }}</span>
+            <button class="fs-chip-x" (click)="clearOneFilter(sel.id)" title="Remove filter">✕</button>
+          </span>
+        </ng-container>
+        <span class="fs-result">
+          {{ tableRows.length }} record{{ tableRows.length !== 1 ? 's' : '' }}
+        </span>
+        <button class="btn-clear-filters" (click)="clearAllFilters()">
+          Clear all
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ── TAB PANEL 1 : CHARTS ───────────────────────────────────────────── -->
+    <div [hidden]="activeTab !== 'charts'">
+
+      <div class="sd-tip" *ngIf="activeFilterCount === 0">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        Select any chart segment or legend row to apply a cascading filter.
+        Switch to <strong>Table View</strong> to see filtered records.
+      </div>
+
+      <!-- ── FULLY DYNAMIC CHART GRID — zero hardcoding ─────────────────── -->
+      <div class="sd-charts-grid">
+        <ng-container *ngFor="let def of config.chartDefs; let i = index">
+
+          <div class="sd-card" [class.sd-card--selected]="selections[def.id]">
+
+            <div class="sd-card-header">
+              <div class="sd-card-title-group">
+                <p class="sd-card-title">{{ def.title }}</p>
+                <p class="sd-card-sub">{{ def.subtitle }}</p>
+              </div>
+              <div class="sd-card-actions">
+                <span class="sd-card-badge">
+                  {{ chartSegments[i]?.length ?? 0 }} types
+                </span>
+                <button *ngIf="selections[def.id]" class="btn-card-clear" (click)="clearOneFilter(def.id)">✕</button>
+              </div>
+            </div>
+
+            <div class="sd-active-pill" *ngIf="selections[def.id]">
+              Selected: <strong>{{ selections[def.id] }}</strong>
+            </div>
+
+            <!-- chartCanvas directive = dynamic QueryList, no #canvas0..5 -->
+            <div class="sd-canvas-box">
+              <canvas chartCanvas></canvas>
+            </div>
+
+            <div class="sd-mini-legend">
+              <div class="ml-row" *ngFor="let seg of chartSegments[i]"
+                [class.ml-row--on]="selections[def.id] === seg.label" (click)="onLegendClick(i, seg)">
+                <span class="ml-dot" [style.background]="seg.color"></span>
+                <span class="ml-name">{{ seg.label }}</span>
+                <span class="ml-val">{{ seg.value }}</span>
+              </div>
+            </div>
+
+          </div>
+
+        </ng-container>
+      </div>
+
+    </div>
+
+
+    <!-- ── TAB PANEL 2 : TABLE ────────────────────────────────────────────── -->
+    <div [hidden]="activeTab !== 'table'">
+      <section class="sd-table-section">
+
+        <!-- Table top bar -->
+        <div class="sd-table-topbar">
+          <div class="sd-table-topbar-left">
+            <h3 class="tbl-title">Records</h3>
+            <span class="tbl-badge">{{ tableRows.length }}</span>
+            <span class="tbl-filter-note" *ngIf="activeFilterCount > 0">
+              — filtered from {{ allRecordsCount }} total
+            </span>
+          </div>
+          <div class="sd-table-topbar-right">
+            <input type="text" class="tbl-search" placeholder="Search records..." [(ngModel)]="searchTerm"
+              (input)="onSearch()">
+          </div>
+        </div>
+
+        <!-- Scrollable table -->
+        <div class="sd-table-scroll">
+          <table class="sd-table">
+
+            <!-- Header -->
+            <thead>
+              <tr>
+                <th *ngFor="let col of config.columns" (click)="sortBy(col.key)">
+                  {{ col.display }}
+                  <span class="th-sort">
+                    <ng-container *ngIf="sortKey === col.key">
+                      {{ sortDir === 'asc' ? '▲' : '▼' }}
+                    </ng-container>
+                    <ng-container *ngIf="sortKey !== col.key">
+                      ⇅
+                    </ng-container>
+                  </span>
+                </th>
+              </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody>
+              <tr class="sd-tr" *ngFor="let row of pagedRows; let i = index">
+                <td *ngFor="let col of config.columns">
+                  {{ row[col.key] ?? '—' }}
+                </td>
+              </tr>
+
+              <!-- Empty state -->
+              <tr *ngIf="pagedRows.length === 0">
+                <td [attr.colspan]="config.columns.length" class="tbl-empty">
+                  <div class="tbl-empty-icon">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                      style="opacity:0.3">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <line x1="3" y1="9" x2="21" y2="9" />
+                      <line x1="3" y1="15" x2="21" y2="15" />
+                      <line x1="9" y1="9" x2="9" y2="21" />
+                    </svg>
+                  </div>
+                  <p>No records found</p>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="sd-table-pagination">
+          <span class="pg-info">
+            Showing {{ paginationInfo }}
+          </span>
+
+          <div class="pg-controls">
+            <button class="btn-ghost pg-btn" [disabled]="currentPage === 1" (click)="goToPage(1)">«</button>
+
+            <button class="btn-ghost pg-btn" [disabled]="currentPage === 1"
+              (click)="goToPage(currentPage - 1)">‹</button>
+
+            <ng-container *ngFor="let p of pageNumbers">
+              <button class="btn-ghost pg-btn" [class.btn-primary]="p === currentPage" (click)="goToPage(p)">
+                {{ p }}
+              </button>
+            </ng-container>
+
+            <button class="btn-ghost pg-btn" [disabled]="currentPage === totalPages"
+              (click)="goToPage(currentPage + 1)">›</button>
+
+            <button class="btn-ghost pg-btn" [disabled]="currentPage === totalPages"
+              (click)="goToPage(totalPages)">»</button>
+          </div>
+
+          <div class="pg-size">
+            <span>Rows per page:</span>
+            <select class="pg-select" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+  </div>
+</div>

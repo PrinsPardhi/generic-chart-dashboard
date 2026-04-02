@@ -1,0 +1,62 @@
+<div class="demo-shell">
+
+  <!-- Top bar -->
+  <div class="demo-topbar">
+    <div class="demo-topbar-left">
+      <span class="demo-logo">vio-dashboard</span>
+      <span class="demo-version">v1.0.0</span>
+      <span class="demo-sep">|</span>
+      <span class="demo-subtitle">Angular 19 Library Demo</span>
+    </div>
+    <div class="demo-mode-switcher">
+      <button class="demo-mode-btn" [class.active]="activeDemo==='drill'" (click)="switchDemo('drill')">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/>
+        </svg>
+        Drill Mode
+      </button>
+      <button class="demo-mode-btn" [class.active]="activeDemo==='builder'" (click)="switchDemo('builder')">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        Builder Mode
+      </button>
+    </div>
+  </div>
+
+  <!-- Banner -->
+  @if (activeDemo === 'drill') {
+    <div class="demo-banner demo-banner--drill">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <div>
+        <strong>Drill Mode</strong> — Charts are pre-defined in config. Click any segment or legend row to cross-filter all other charts and the table view.
+        Config: <code>[drillEnabled]="true"</code> &nbsp;|&nbsp; <code>[drillRecords]="records"</code>
+      </div>
+    </div>
+  }
+  @if (activeDemo === 'builder') {
+    <div class="demo-banner demo-banner--builder">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <div>
+        <strong>Builder Mode</strong> — Click <em>Add Chart</em> to pick X param, Y aggregation, chart type and optional date range. Each chart fetches data independently.
+        Config: <code>[drillEnabled]="false"</code> &nbsp;|&nbsp; <code>[apiFn]="builderApiFn"</code>
+      </div>
+    </div>
+  }
+
+  <!-- Library component -->
+  <div class="demo-content">
+    @if (activeDemo === 'drill') {
+      <vio-dashboard [config]="drillConfig" [drillRecords]="drillRecords" />
+    }
+    @if (activeDemo === 'builder') {
+      <vio-dashboard [config]="builderConfig" [apiFn]="builderApiFn" />
+    }
+  </div>
+
+</div>

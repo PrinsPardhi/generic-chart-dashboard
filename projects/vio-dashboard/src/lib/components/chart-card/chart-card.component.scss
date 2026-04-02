@@ -1,0 +1,229 @@
+/* ============================================================
+   chart-card.component.scss
+   ============================================================ */
+
+/* ── Card shell ──────────────────────────────────────────────── */
+:host { display: contents; }
+
+.vio-card {
+  background: #fff;
+  border: 1px solid #dde1e7;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  display: flex; flex-direction: column;
+  overflow: visible;           /* allow dropdown to escape card */
+  transition: border-color .2s, box-shadow .2s;
+  position: relative;
+
+  &--selected {
+    border-color: #0054a6;
+    border-top: 2px solid #0054a6;
+    box-shadow: 0 0 0 3px rgba(0,84,166,.1);
+  }
+  &--expanded {
+    grid-column: 1 / -1;       /* span full grid width */
+  }
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.vcc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px;
+  background: #162940;
+  border-bottom: 1px solid #dde1e7;
+  border-radius: 8px 8px 0 0;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.vcc-title-group { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; }
+.vcc-title  { margin: 0; font-size: 10px; font-weight: 500; color: #fff; }
+.vcc-sub    { margin: 0; font-size: 9px;  color: #cbcbcb; }
+.vcc-actions { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+
+/* ── Chart type switcher ─────────────────────────────────────── */
+.type-switcher {
+  display: flex; border: 1px solid rgba(255,255,255,.2); border-radius: 4px; overflow: hidden;
+}
+.type-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 22px;
+  background: transparent; border: none; cursor: pointer; color: #7fa8d0;
+  transition: background .12s, color .12s;
+  &:hover  { background: rgba(255,255,255,.12); color: #fff; }
+  &--on    { background: #0054a6; color: #fff; }
+}
+
+/* ── Sort group ──────────────────────────────────────────────── */
+.sort-group {
+  display: flex; align-items: center; gap: 2px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 4px; padding: 2px 5px;
+}
+.sort-label { font-size: 9px; color: #7fa8d0; text-transform: uppercase; letter-spacing: .04em; margin-right: 2px; }
+.sort-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; background: transparent; border: none;
+  cursor: pointer; color: #7fa8d0; border-radius: 3px; transition: all .12s;
+  &:hover { background: rgba(255,255,255,.12); color: #fff; }
+  &--on   { background: #0054a6; color: #fff; }
+}
+
+/* ── Shared small button styles ──────────────────────────────── */
+.pill-btn {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: #c2d6ea; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 3px; cursor: pointer;
+  transition: all .12s; font-family: inherit; min-width: 24px;
+  &:hover { background: rgba(255,255,255,.2); color: #fff; }
+}
+
+.icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15); border-radius: 4px;
+  cursor: pointer; color: #7fa8d0; transition: all .12s;
+  &:hover { background: rgba(255,255,255,.18); color: #fff; }
+}
+
+.clear-btn {
+  background: transparent; border: 1px solid rgba(239,68,68,.4);
+  color: #f87171; width: 22px; height: 22px; border-radius: 50%;
+  cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center;
+  transition: all .12s;
+  &:hover { background: rgba(239,68,68,.2); color: #fca5a5; }
+}
+
+/* ── Export actions menu ─────────────────────────────────────── */
+.actions-wrap { position: relative; }
+.actions-menu {
+  position: absolute; top: calc(100% + 4px); right: 0;
+  background: #fff; border: 1px solid #dde1e7; border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.14);
+  min-width: 170px; z-index: 200;
+  overflow: hidden;
+  animation: menuIn .15s ease;
+}
+@keyframes menuIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+
+.am-item {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 9px 14px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 12px; color: #1a1f2e; text-align: left; font-family: inherit;
+  transition: background .1s;
+  &:hover { background: #f4f5f7; }
+  svg { flex-shrink: 0; color: #5a6578; }
+}
+.am-item + .am-item { border-top: 1px solid #f0f2f4; }
+
+/* ── Active filter pill ──────────────────────────────────────── */
+.vcc-active-pill {
+  background: #e6f0fb; border-bottom: 1px solid #bfdbfe;
+  padding: 4px 12px; font-size: 12px; color: #5a6578;
+  strong { color: #0054a6; font-weight: 600; }
+}
+
+/* ── Canvas ──────────────────────────────────────────────────── */
+.vcc-canvas-box {
+  height: 190px; position: relative; padding: 10px 12px 0;
+  transition: height .25s ease;
+  canvas { width: 100% !important; height: 100% !important; }
+  &--expanded { height: 320px; }
+}
+
+/* ── Mini legend ─────────────────────────────────────────────── */
+.vcc-legend {
+  padding: 6px 0 4px; margin: 0 12px 4px;
+  display: flex; flex-direction: column; gap: .5px;
+  max-height: 130px; overflow-y: auto;
+}
+.ml-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 3px 5px; border-radius: 4px; cursor: default; transition: background .1s;
+  &:hover { background: #f4f5f7; }
+  &--on   { background: #e6f0fb; }
+}
+.ml-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ml-name { flex: 1; font-size: 11.5px; color: #5a6578; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ml-val  { font-size: 11.5px; font-weight: 700; color: #1a1f2e; min-width: 28px; text-align: right; }
+
+/* ── Modal overlay ───────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(10,20,35,.5);
+  backdrop-filter: blur(3px); display: flex; align-items: center;
+  justify-content: center; z-index: 1000;
+  animation: fadeIn .15s ease;
+}
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.modal-panel {
+  background: #fff; border: 1px solid #dde1e7; border-radius: 10px;
+  width: 540px; max-width: 96vw; max-height: 88vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.22);
+  animation: slideUp .18s ease;
+}
+@keyframes slideUp { from { transform:translateY(18px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: #162940;
+  border-radius: 10px 10px 0 0; flex-shrink: 0;
+}
+.modal-title { font-size: 13px; font-weight: 600; color: #fff; }
+.modal-close {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #c2d6ea;
+  width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; transition: background .12s;
+  &:hover { background: rgba(255,255,255,.2); color: #fff; }
+}
+
+.modal-body { flex: 1; overflow-y: auto; padding: 0; }
+.modal-body--table { padding: 0; }
+
+/* ── Pop-up data table ───────────────────────────────────────── */
+.pop-table {
+  width: 100%; border-collapse: collapse; font-size: 12.5px;
+  thead tr { background: #f8f9fa; position: sticky; top: 0; z-index: 1; }
+  th {
+    padding: 9px 14px; text-align: left; font-weight: 600; color: #5a6578;
+    font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 2px solid #dde1e7; white-space: nowrap;
+  }
+  td { padding: 8px 14px; color: #1a1f2e; border-bottom: 1px solid #f0f2f4; }
+  tr:hover td { background: #f4f5f7; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  tr:nth-child(even):hover td { background: #f4f5f7; }
+}
+.tbl-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.tbl-total td { background: #f0f4f8 !important; font-weight: 600; border-top: 2px solid #dde1e7; }
+
+/* ── Sort buttons inside table header ────────────────────────── */
+.th-sorts {
+  margin-left: 4px; display: inline-flex; gap: 2px;
+  button {
+    background: none; border: none; cursor: pointer;
+    color: #b0b8c4; font-size: 11px; padding: 0 1px; line-height: 1;
+    transition: color .1s;
+    &:hover { color: #0054a6; }
+    &.active { color: #0054a6; font-weight: 700; }
+  }
+}
+
+/* ── Modal footer ────────────────────────────────────────────── */
+.modal-footer {
+  padding: 10px 16px; background: #f8f9fa;
+  border-top: 1px solid #dde1e7; border-radius: 0 0 10px 10px; flex-shrink: 0;
+  &--right { display: flex; justify-content: flex-end; gap: 8px; }
+}
+.btn-export-sm {
+  background: #0054a6; color: #fff; border: none; padding: 6px 14px;
+  border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: inherit;
+  &:hover { background: #003d82; }
+}
+.btn-ghost-sm {
+  background: transparent; color: #5a6578; border: 1px solid #b0b8c4;
+  padding: 6px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; font-family: inherit;
+  &:hover { background: #f4f5f7; }
+}

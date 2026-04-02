@@ -1,0 +1,105 @@
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,20,35,.55);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  animation: fadeIn .18s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-panel {
+  background: #fff;
+  border: 1px solid #dde1e7;
+  border-radius: 10px;
+  width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: slideUp .2s ease;
+  display: flex; flex-direction: column;
+}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; background: #162940;
+  border-bottom: 1px solid #dde1e7;
+  border-radius: 10px 10px 0 0; flex-shrink: 0;
+}
+.modal-header-left { display: flex; align-items: center; gap: 8px; color: #fff; }
+.modal-title { font-size: 13px; font-weight: 600; color: #fff; }
+.modal-close {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #c2d6ea;
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .15s;
+  &:hover { background: rgba(255,255,255,.2); color: #fff; }
+}
+
+.modal-body { padding: 20px 18px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group--error {
+  .form-input, .form-select { border-color: #b91c1c; box-shadow: 0 0 0 2px rgba(185,28,28,.12); }
+}
+.form-label { font-size: 11.5px; font-weight: 700; color: #1a1f2e; text-transform: uppercase; letter-spacing: .06em; }
+.form-sublabel { font-size: 11px; font-weight: 600; color: #5a6578; }
+.req { color: #b91c1c; margin-left: 2px; }
+
+.form-input {
+  border: 1px solid #b0b8c4; border-radius: 5px; padding: 7px 11px;
+  font-size: 12.5px; color: #1a1f2e; outline: none;
+  transition: border-color .15s, box-shadow .15s; font-family: inherit;
+  &:focus { border-color: #0054a6; box-shadow: 0 0 0 2px rgba(0,84,166,.12); }
+}
+
+.form-select-wrap { position: relative; }
+.form-select-wrap::after {
+  content: '▾'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  color: #8c97a8; pointer-events: none; font-size: 11px;
+}
+.form-select {
+  width: 100%; border: 1px solid #b0b8c4; border-radius: 5px;
+  padding: 7px 28px 7px 11px; font-size: 12.5px; color: #1a1f2e;
+  background: #fff; outline: none; appearance: none; cursor: pointer;
+  transition: border-color .15s, box-shadow .15s; font-family: inherit;
+  &:focus { border-color: #0054a6; box-shadow: 0 0 0 2px rgba(0,84,166,.12); }
+}
+
+.form-hint { font-size: 11px; color: #8c97a8; }
+.form-hint-inline { font-size: 11px; color: #8c97a8; font-weight: 400; text-transform: none; letter-spacing: 0; }
+.form-error { font-size: 11px; color: #b91c1c; font-weight: 600; }
+
+.form-row {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  > .form-group { flex: 1; min-width: 180px; }
+}
+
+.chart-type-row { display: flex; gap: 8px; }
+.chart-type-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border: 1px solid #b0b8c4; border-radius: 5px;
+  background: #fff; color: #5a6578; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all .15s; font-family: inherit;
+  &:hover { border-color: #0054a6; color: #0054a6; background: #e6f0fb; }
+  &--active { border-color: #0054a6; background: #0054a6; color: #fff; svg { stroke: #fff; } }
+}
+
+.modal-footer {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 12px 18px; background: #f8f9fa;
+  border-top: 1px solid #dde1e7;
+  border-radius: 0 0 10px 10px; flex-shrink: 0;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #0054a6; color: #fff; border: 1px solid #0054a6;
+  padding: 7px 16px; border-radius: 4px; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; transition: background .15s; font-family: inherit;
+  &:hover { background: #003d82; }
+}
+.btn-ghost {
+  background: transparent; color: #5a6578; border: 1px solid #b0b8c4;
+  padding: 7px 14px; border-radius: 4px; font-size: 12.5px;
+  cursor: pointer; transition: background .15s; font-family: inherit;
+  &:hover { background: #f4f5f7; color: #1a1f2e; }
+}

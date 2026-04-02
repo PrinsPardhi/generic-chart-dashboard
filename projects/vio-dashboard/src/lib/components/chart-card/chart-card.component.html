@@ -1,0 +1,219 @@
+<!-- ============================================================
+     vio-chart-card — self-contained card with all toolbar features
+     ============================================================ -->
+<div class="vio-card" [class.vio-card--selected]="selectedLabel" [class.vio-card--expanded]="expanded">
+
+  <!-- ── Card Header ──────────────────────────────────────────── -->
+  <div class="vcc-header">
+    <div class="vcc-title-group">
+      <p class="vcc-title">{{ title }}</p>
+      <p class="vcc-sub">{{ subtitle }}</p>
+    </div>
+
+    <div class="vcc-actions">
+
+      <!-- Chart type switcher -->
+      <div class="type-switcher">
+        <button class="type-btn" [class.type-btn--on]="currentType==='bar'"     (click)="onTypeChange('bar')"      title="Bar chart">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/>
+          </svg>
+        </button>
+        <button class="type-btn" [class.type-btn--on]="currentType==='doughnut'" (click)="onTypeChange('doughnut')" title="Doughnut chart">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Sort controls -->
+      <div class="sort-group">
+        <span class="sort-label">Sort</span>
+        <!-- Label sort -->
+        <button class="sort-btn" [class.sort-btn--on]="sortField==='label' && sortDir==='asc'"
+                (click)="setSort('label','asc')" title="Label A→Z">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="4" y1="6" x2="14" y2="6"/><line x1="4" y1="12" x2="10" y2="12"/>
+            <line x1="4" y1="18" x2="6" y2="18"/><polyline points="17 4 21 8 17 12"/>
+          </svg>
+        </button>
+        <button class="sort-btn" [class.sort-btn--on]="sortField==='label' && sortDir==='desc'"
+                (click)="setSort('label','desc')" title="Label Z→A">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="4" y1="6" x2="14" y2="6"/><line x1="4" y1="12" x2="10" y2="12"/>
+            <line x1="4" y1="18" x2="6" y2="18"/><polyline points="21 4 17 8 21 12"/>
+          </svg>
+        </button>
+        <!-- Value sort -->
+        <button class="sort-btn" [class.sort-btn--on]="sortField==='value' && sortDir==='desc'"
+                (click)="setSort('value','desc')" title="Value high→low">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+        <button class="sort-btn" [class.sort-btn--on]="sortField==='value' && sortDir==='asc'"
+                (click)="setSort('value','asc')" title="Value low→high">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Val/% toggle -->
+      <button class="pill-btn" (click)="toggleDisplayMode()" [title]="displayMode==='value' ? 'Switch to percent' : 'Switch to values'">
+        {{ displayMode === 'value' ? '#' : '%' }}
+      </button>
+
+      <!-- Table view -->
+      <button class="icon-btn" (click)="openTableModal()" title="Table view">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
+          <line x1="9" y1="9" x2="9" y2="21"/>
+        </svg>
+      </button>
+
+      <!-- Expand / Collapse -->
+      <button class="icon-btn" (click)="toggleExpand()" [title]="expanded ? 'Collapse' : 'Expand to full width'">
+        @if (!expanded) {
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+        } @else {
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+            <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+          </svg>
+        }
+      </button>
+
+      <!-- Export actions dropdown -->
+      <div class="actions-wrap" (clickOutside)="closeMenu()">
+        <button class="icon-btn" (click)="toggleMenu($event)" title="Export options">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/>
+            <circle cx="12" cy="19" r="1" fill="currentColor"/>
+          </svg>
+        </button>
+        @if (showActionsMenu) {
+          <div class="actions-menu" (click)="$event.stopPropagation()">
+            <button class="am-item" (click)="exportExcel()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              Export to Excel
+            </button>
+            <button class="am-item" (click)="exportImage()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              Save as Image
+            </button>
+            <button class="am-item" (click)="exportPdf()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              Save as PDF
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Clear filter btn (drill mode) -->
+      @if (showClearBtn) {
+        <button class="clear-btn" (click)="onClearClick()">✕</button>
+      }
+
+    </div>
+  </div>
+
+  <!-- Active filter pill -->
+  @if (activePill) {
+    <div class="vcc-active-pill">
+      Selected: <strong>{{ activePill }}</strong>
+    </div>
+  }
+
+  <!-- Canvas -->
+  <div class="vcc-canvas-box" [class.vcc-canvas-box--expanded]="expanded">
+    <canvas #canvasRef></canvas>
+  </div>
+
+  <!-- Mini legend -->
+  <div class="vcc-legend">
+    @for (seg of sortedSegments; track seg.label) {
+      <div class="ml-row" [class.ml-row--on]="selectedLabel === seg.label">
+        <span class="ml-dot" [style.background]="seg.color"></span>
+        <span class="ml-name">{{ seg.label }}</span>
+        <span class="ml-val">{{ displayVal(seg.value) }}</span>
+      </div>
+    }
+  </div>
+
+</div>
+
+<!-- ── Table Modal ─────────────────────────────────────────────── -->
+@if (showTableModal) {
+  <div class="modal-overlay" (click)="closeTableModal()">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <span class="modal-title">{{ title }} — Data Table</span>
+        <button class="modal-close" (click)="closeTableModal()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body modal-body--table">
+        <table class="pop-table">
+          <thead>
+            <tr>
+              <th>
+                Label
+                <span class="th-sorts">
+                  <button [class.active]="sortField==='label'&&sortDir==='asc'"  (click)="setSort('label','asc')">↑</button>
+                  <button [class.active]="sortField==='label'&&sortDir==='desc'" (click)="setSort('label','desc')">↓</button>
+                </span>
+              </th>
+              <th>
+                Value
+                <span class="th-sorts">
+                  <button [class.active]="sortField==='value'&&sortDir==='asc'"  (click)="setSort('value','asc')">↑</button>
+                  <button [class.active]="sortField==='value'&&sortDir==='desc'" (click)="setSort('value','desc')">↓</button>
+                </span>
+              </th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (seg of sortedSegments; track seg.label) {
+              <tr>
+                <td>
+                  <span class="tbl-dot" [style.background]="seg.color"></span>
+                  {{ seg.label }}
+                </td>
+                <td>{{ seg.value }}</td>
+                <td>{{ pct(seg.value) }}</td>
+              </tr>
+            }
+            <tr class="tbl-total">
+              <td><strong>Total</strong></td>
+              <td><strong>{{ total }}</strong></td>
+              <td><strong>100%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer modal-footer--right">
+        <button class="btn-export-sm" (click)="exportExcel()">Export Excel</button>
+        <button class="btn-ghost-sm" (click)="closeTableModal()">Close</button>
+      </div>
+    </div>
+  </div>
+}

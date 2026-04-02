@@ -1,0 +1,167 @@
+@use '../../styles/dashboard-shared' as *;
+
+.builder-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+  padding: 0 14px; min-height: 44px;
+}
+.builder-toolbar-left {
+  display: flex; align-items: center; gap: 8px; color: var(--text-2);
+}
+.builder-toolbar-title {
+  font-size: 12.5px; font-weight: 700; color: var(--text-1);
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.builder-chart-count {
+  background: var(--accent-light); border: 1px solid var(--info-border);
+  color: var(--accent); font-size: 11px; font-weight: 700;
+  padding: 1px 8px; border-radius: 12px;
+}
+.btn-add-chart {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent); color: #fff; border: none;
+  padding: 7px 16px; border-radius: var(--radius-sm);
+  font-size: 12.5px; font-weight: 600; cursor: pointer;
+  transition: background .15s; font-family: inherit;
+  &:hover { background: var(--accent-hover); }
+}
+
+.builder-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 60px 24px;
+  background: var(--bg-card);
+  border: 2px dashed var(--border); border-radius: var(--radius-lg);
+  text-align: center; gap: 8px;
+}
+.builder-empty-icon { margin-bottom: 8px; }
+.builder-empty-title { font-size: 14px; font-weight: 700; color: var(--text-1); margin: 0; }
+.builder-empty-sub { font-size: 12.5px; color: var(--text-3); margin: 0 0 12px; }
+
+.chart-loading {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; height: 190px; font-size: 12.5px; color: var(--text-3);
+}
+.spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.chart-error {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; height: 190px; font-size: 12px; color: var(--danger);
+  background: var(--danger-bg); margin: 0 14px 10px;
+  border-radius: var(--radius-sm); border: 1px solid var(--danger-border);
+  padding: 0 16px;
+}
+.btn-retry {
+  background: var(--danger); color: #fff; border: none;
+  padding: 4px 12px; border-radius: var(--radius-sm);
+  font-size: 11.5px; font-weight: 600; cursor: pointer;
+  font-family: inherit; margin-left: 6px;
+  &:hover { background: #991b1b; }
+}
+
+.btn-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; cursor: pointer;
+  transition: all .12s; background: rgba(255,255,255,.1);
+  &:disabled { opacity: .4; cursor: not-allowed; }
+}
+.btn-icon--edit {
+  border-color: rgba(255,255,255,.15); color: #7fa8d0;
+  &:hover:not(:disabled) { background: rgba(255,255,255,.2); color: #fff; }
+}
+.btn-icon--refresh {
+  border-color: rgba(255,255,255,.15); color: #7fa8d0;
+  &:hover:not(:disabled) { background: rgba(255,255,255,.2); color: #fff; }
+}
+.btn-icon--remove {
+  border-color: rgba(239,68,68,.3); color: #f87171;
+  &:hover:not(:disabled) { background: rgba(239,68,68,.2); color: #fca5a5; }
+}
+
+.chart-type-pill {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  color: #c2d6ea; font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  padding: 2px 7px; border-radius: 3px;
+}
+.date-range-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+  color: #9ab8d4; font-size: 9.5px; padding: 2px 7px;
+  border-radius: 3px; white-space: nowrap;
+}
+
+/* ── Builder card wrapper (adds meta row below the ChartCard) ──── */
+.builder-card-wrap {
+  display: flex; flex-direction: column;
+}
+
+.builder-card-meta {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px;
+  background: #f8f9fa;
+  border: 1px solid #dde1e7;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #e6f0fb; border: 1px solid #bfdbfe;
+  color: #0054a6; font-size: 10px; padding: 2px 7px; border-radius: 3px;
+}
+
+.meta-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: transparent; border: 1px solid #b0b8c4;
+  color: #5a6578; font-size: 10.5px; padding: 3px 9px; border-radius: 3px;
+  cursor: pointer; transition: all .12s; font-family: inherit;
+  &:hover { background: #f4f5f7; color: #1a1f2e; border-color: #8c97a8; }
+  &--danger {
+    color: #b91c1c; border-color: #fecaca;
+    margin-left: auto;
+    &:hover { background: #fef2f2; border-color: #b91c1c; }
+  }
+}
+
+/* ── Loading / error states (skeleton cards) ──────────────────── */
+.sd-card--loading { opacity: .85; }
+
+.chart-loading {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; height: 190px; font-size: 12.5px; color: #8c97a8;
+}
+.spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid #dde1e7; border-top-color: #0054a6;
+  border-radius: 50%; animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.chart-error {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 190px; font-size: 12px; color: #b91c1c;
+  background: #fef2f2; margin: 0; padding: 0 16px;
+  border-radius: 0 0 8px 8px;
+}
+.btn-retry {
+  background: #b91c1c; color: #fff; border: none;
+  padding: 4px 12px; border-radius: 4px; font-size: 11.5px;
+  font-weight: 600; cursor: pointer; font-family: inherit; margin-left: 6px;
+}
+
+/* builder-specific icon buttons in error state */
+.btn-icon--remove {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 4px;
+  border: 1px solid rgba(239,68,68,.3); color: #f87171;
+  background: rgba(255,255,255,.08); cursor: pointer; transition: all .12s;
+  &:hover { background: rgba(239,68,68,.2); color: #fca5a5; }
+}
